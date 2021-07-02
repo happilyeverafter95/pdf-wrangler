@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/happilyeverafter95/pdf-wrangler',
-    install_requires=['pdfminer.six==20181108'],
+    install_requires=['pdfminer.six==20181108', 'Pillow==8.3.0'],
     project_urls={
         'Bug Tracker': 'https://github.com/happilyeverafter95/pdf-wrangler/issues',
     },
