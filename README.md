@@ -5,7 +5,7 @@ This is a PDFMiner wrapper used to simplify extraction. More functionalities to 
 ## Usage
 
 ```
-from wrangler import Document
+from pdf_wrangler import Document
 
 pdf_document = Document('path/to/pdf', password='optional password')
 
