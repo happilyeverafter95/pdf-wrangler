@@ -11,4 +11,3 @@ from src.pdf_wrangler import Document
 def test_number_of_pages_extracted(filepath: Path, expected_pages: int) -> None:
     document = Document(filepath)
     assert len(document.pages) == expected_pages
-

@@ -1,0 +1,45 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@1.2
+
+workflows:
+  sample:
+    jobs:
+      - build-and-test
+
+working_directory: ~/pdf-wrangler
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+          pip-dependency-file: requirements_dev.txt
+      - run:
+          name: Run tests
+          command: pytest
+      # used to manage secrets for deploying to pypi
+      - run:
+          name: init .pypirc
+          command: |
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "username = happilyeverafter95" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+      - run:
+          # TODO: use makefile instead
+          name: create packages
+          command: |
+            if [ $CIRCLE_BRANCH == 'main' ] ; then
+              python3 setup.py sdist bdist_wheel
+            fi
+      - run:
+          name: upload to pypi
+          command: |
+            if [ $CIRCLE_BRANCH == 'main' ] ; then
+              . venv/bin/activate
+              twine upload dist/*
+            fi
