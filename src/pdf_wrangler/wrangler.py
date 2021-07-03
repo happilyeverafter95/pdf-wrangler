@@ -33,9 +33,13 @@ class PDFImage:
     def __init__(self, image: LTImage, num_image: int, page_num: int) -> None:
         self.__num_image = num_image + 1
         self.__page_num = page_num
-        channel = self._get_image_mode(image)
-        image_rawdata = zlib.decompress(image.stream.get_rawdata())
-        self.image = Image.frombytes(channel, image.srcsize, image_rawdata)
+        try:
+            channel = self._get_image_mode(image)
+            image_rawdata = zlib.decompress(image.stream.get_rawdata())
+            self.image = Image.frombytes(channel, image.srcsize, image_rawdata)
+        except Exception as e:
+            logger.warn(f'Unable to extract image {num_image} from page {page_num} due to {e}')
+            self.image = None
 
     def __repr__(self) -> str:
         return str(self)
