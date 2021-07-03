@@ -5,9 +5,9 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setuptools.setup(
     name='pdf_wrangler',
-    version='0.0.1',
+    version='0.0.2',
     author='happilyeverafter95',
-    author_email='author@example.com',
+    author_email='author@example.com',  # TODO: update email
     description='PDFMiner Wrapper & Other PDF utilities',
     long_description=long_description,
     long_description_content_type='text/markdown',
