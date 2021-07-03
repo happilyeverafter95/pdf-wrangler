@@ -33,9 +33,13 @@ jobs:
           # TODO: use makefile instead
           name: create packages
           command: |
-            python3 setup.py sdist bdist_wheel
+            if [ $CIRCLE_BRANCH == 'main' ] ; then
+              python3 setup.py sdist bdist_wheel
+            fi
       - run:
           name: upload to pypi
           command: |
-            . venv/bin/activate
-            twine upload dist/*
+            if [ $CIRCLE_BRANCH == 'main' ] ; then
+              . venv/bin/activate
+              twine upload dist/*
+            fi
