@@ -40,6 +40,5 @@ jobs:
           name: upload to pypi
           command: |
             if [ $CIRCLE_BRANCH == 'main' ] ; then
-              . venv/bin/activate
               twine upload dist/*
             fi

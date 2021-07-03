@@ -1,11 +1,17 @@
+import os
 import setuptools
+
+
+VERSION = f"0.0.{os.getenv('CIRCLE_BUILD_NUM')}"
+
 
 with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
 
+
 setuptools.setup(
     name='pdf_wrangler',
-    version='0.0.2',
+    version=VERSION,
     author='happilyeverafter95',
     author_email='author@example.com',  # TODO: update email
     description='PDFMiner Wrapper & Other PDF utilities',
