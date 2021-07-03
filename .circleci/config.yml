@@ -8,6 +8,7 @@ workflows:
     jobs:
       - build-and-test
 
+working_directory: ~/pdf-wrangler
 
 jobs:
   build-and-test:
@@ -21,3 +22,20 @@ jobs:
       - run:
           name: Run tests
           command: pytest
+      # used to manage secrets for deploying to pypi
+      - run:
+          name: init .pypirc
+          command: |
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "username = happilyeverafter95" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+      - run:
+          # TODO: use makefile instead
+          name: create packages
+          command: |
+            python3 setup.py sdist bdist_wheel
+      - run:
+          name: upload to pypi
+          command: |
+            . venv/bin/activate
+            twine upload dist/*
