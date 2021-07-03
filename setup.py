@@ -1,7 +1,27 @@
+import sys
+import os
 import setuptools
+from setuptools.command.install import install
+
+
+VERSION = '0.0.14'
 
 with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
+
+
+class Verifications(install):
+    description = 'verifications prior to pushing new releases'
+
+    def verify_version_command(self) -> None:
+        tag = os.getenv('CIRCLE_TAG')
+        if tag != VERSION:
+            info = (f'Git tag {tag} does not match {VERSION}')
+            sys.exit(info)
+
+    def run(self) -> None:
+        self.verify_version_command()
+
 
 setuptools.setup(
     name='pdf_wrangler',
