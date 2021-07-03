@@ -2,7 +2,7 @@ import os
 import setuptools
 
 
-VERSION = f"0.0.{os.getenv('CIRCLE_BUILD_NUMBER')}"
+VERSION = f"0.0.{os.getenv('CIRCLE_BUILD_NUM')}"
 
 
 with open('README.md', 'r', encoding='utf-8') as fh:
