@@ -1,8 +1,7 @@
-import os
 import setuptools
 
 
-VERSION = f"0.0.{os.getenv('CIRCLE_BUILD_NUM')}"
+VERSION = '0.0.25'
 
 
 with open('README.md', 'r', encoding='utf-8') as fh:
@@ -14,7 +13,7 @@ setuptools.setup(
     version=VERSION,
     author='happilyeverafter95',
     author_email='author@example.com',  # TODO: update email
-    description='PDFMiner Wrapper & Other PDF utilities',
+    description='PDFMiner Wrapper for extractions',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/happilyeverafter95/pdf-wrangler',
@@ -27,6 +26,7 @@ setuptools.setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
+    keywords=['pdf parser', 'text mining'],
     package_dir={'': 'src'},
     packages=setuptools.find_packages(where='src'),
     python_requires='>=3.6',

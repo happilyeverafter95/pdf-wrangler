@@ -1,17 +1,17 @@
 # pdf-wrangler
 
-PDFMiner wrapper used to simplify PDF extraction. More functionalities to come to make it a more general purpose PDF utility tool.
+PDFMiner wrapper used to simplify PDF extraction and other PDF utilities.
 
 ## Document class
 
-The `Document` class is used to represent a PDF document. It contains functionality to access the raw text by page, PDF metadata and images in the form of PDFMiner's `LTImage` objects.
+The `Document` class is used to represent a PDF document. It contains functionality to access the raw text by page, PDF metadata and images in the form of PDFMiner's `LTImage` object.
 
 ## Example Usage
 
 ```
 from pdf_wrangler import Document
 
-pdf_document = Document('path/to/pdf', password='optional password')
+pdf_document = Document('path/to/pdf', password='optional parameter for pdf password')
 
 # to access pdf metadata
 pdf_document.get_metadata()
