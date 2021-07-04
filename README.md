@@ -2,11 +2,9 @@
 
 PDFMiner wrapper used to simplify PDF extraction. More functionalities to come to make it a more general purpose PDF utility tool.
 
-## Document Module
+## Document class
 
-The `Document` module provides a class with the same name used to represent a PDF document. The primary `pages` attribute contains extracted text and images compatible with [Pillow Images](https://pillow.readthedocs.io/en/stable/reference/Image.html).
-
-PDF metadata can also be accessed through the `metadata` attribute.
+The `Document` class is used to represent a PDF document. It contains functionality to access the raw text by page, PDF metadata and images in the form of PDFMiner's `LTImage` objects.
 
 ## Example Usage
 
@@ -16,13 +14,13 @@ from pdf_wrangler import Document
 pdf_document = Document('path/to/pdf', password='optional password')
 
 # to access pdf metadata
-pdf_document.metadata
+pdf_document.get_metadata()
 
-# to access pdf text & images by pages (iterable)
-pdf_document.pages
+# to access pdf text
+pdf_document.get_text()
 
-# text on the first page
-pdf_document.pages[0].text
+# to access pdf text on first page
+pdf_document.pages[0].get_text()
 ```
 
 ## Installation
