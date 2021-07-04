@@ -18,7 +18,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/happilyeverafter95/pdf-wrangler',
-    install_requires=['chardet==3.0.4', 'pdfminer.six==20181108', 'Pillow==8.3.0'],
+    install_requires=['chardet==3.0.4', 'pdfminer.six==20181108'],
     project_urls={
         'Bug Tracker': 'https://github.com/happilyeverafter95/pdf-wrangler/issues',
     },
