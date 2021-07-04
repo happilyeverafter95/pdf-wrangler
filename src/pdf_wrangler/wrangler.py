@@ -1,6 +1,4 @@
-import base64
 import logging
-from io import BytesIO
 from typing import List, Dict, Optional
 
 from pdfminer.converter import PDFPageAggregator
@@ -10,9 +8,6 @@ from pdfminer.pdfdocument import (PDFPasswordIncorrect, PDFSyntaxError)
 from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
-from pdfminer.psparser import PSLiteral
-
-from PIL import Image
 
 
 logger = logging.getLogger(__name__)
@@ -25,36 +20,6 @@ def process_metadata(metadata: dict) -> dict:
         except AttributeError:
             pass
     return metadata
-
-
-class PDFImage:
-    def __init__(self, image: LTImage, num_image: int, page_num: int) -> None:
-        self.__num_image = num_image + 1
-        self.__page_num = page_num
-        try:
-            channel = self._get_image_mode(image)
-            image_rawdata = image.stream.get_rawdata()
-            self.image = Image.frombytes(channel, image.srcsize, image_rawdata)
-        except Exception as e:
-            logger.warn(f'Unable to extract image {num_image} from page {page_num} due to "{e}"')
-            self.image = None
-
-    def __repr__(self) -> str:
-        return str(self)
-    
-    def __str__(self) -> str:
-        return f'PDF image {self.__num_image} on page {self.__page_num}'
-
-    def _get_image_mode(self, image: LTImage) -> str:
-        mode = image.stream.attrs.get('ColorSpace', PSLiteral('DeviceGray')).name
-        if mode == 'DeviceRGB':
-            return 'RGB'
-        elif mode == 'DeviceGray' and image.stream.attrs.get('BitsPerComponent', 8) ==1:
-            return '1'
-        return 'L'
-
-    def save(self, filepath: str) -> None:
-        self.image.save(filepath)
 
 
 class Page:
@@ -88,17 +53,19 @@ class Page:
                 self.extract_raw_images(lt_obj, images)
         return images
 
-    def extract_images_from_page(self, page: LTPage) -> list:
-        return [PDFImage(im, i, self.__page_num) for i, im in enumerate(self.extract_raw_images(page, []))]
+    def extract_images_from_page(self, page: LTPage) -> List[LTImage]:
+        return self.extract_raw_images(page, [])
 
 
 class Document:
     def __init__(self, filepath: str, password: Optional[str] = None) -> None:
         self.filepath = filepath
-        self.buffered = BytesIO()
-        self.buffered.write(base64.b64decode(self._read_file()))
         self.password = password
         self.pages = []
+
+        self.fp = open(filepath, 'rb')
+        self.parser = PDFParser(self.fp)
+
         self._extract_pdf_pages()
         self.metadata = self._extract_pdf_metadata()
 
@@ -108,17 +75,12 @@ class Document:
     def __str__(self) -> str:
         return f'PDF from {self.filepath}'
 
-    def _read_file(self) -> None:
-        with open(self.filepath, 'rb') as f:
-            return base64.b64encode(f.read())
-
     def _extract_pdf_pages(self) -> None:
-        self.buffered.seek(0)
         rsrcmgr = PDFResourceManager(caching=False)
         device = PDFPageAggregator(rsrcmgr, laparams=LAParams())
         interpreter = PDFPageInterpreter(rsrcmgr, device)
         try:
-            for page in PDFPage.get_pages(self.buffered,
+            for page in PDFPage.get_pages(self.fp,
                                           None,
                                           maxpages=None,
                                           password=self.password,
@@ -130,13 +92,11 @@ class Document:
         except Exception as e:
             # TODO: make exception handling more strict
             raise Exception(f'Unable to parse PDF pages due to "{e}"')
-        device.close()
         self.pages = [Page(page, i, self.filepath) for i, page in enumerate(self.pages)]
 
     def _extract_pdf_metadata(self) -> Dict[str, str]:
-        parser = PDFParser(self.buffered)
         try:
-            doc = PDFMinerDocument(parser)
+            doc = PDFMinerDocument(self.parser)
         except (ValueError, PDFPasswordIncorrect, PDFSyntaxError):
             return {}
         raw_metadata = doc.info[0] if len(doc.info) == 1 else {}
