@@ -1,1 +1,1 @@
-from .pdf_wrangler.wrangler import Document
+from .wrangler import Document

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-from src.pdf_wrangler import Document
+from src.pdf_wrangler.wrangler import Document
 
 
 @pytest.mark.parametrize('filepath, text', [
