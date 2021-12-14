@@ -1,1 +1,1 @@
-from .wrangler import Document
+from .document import Document
