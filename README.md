@@ -27,7 +27,7 @@ for page in pdf_document.pages:
 page_1_images = pdf_document.pages[0].images
 
 # get first image bytes representation
-page_1_images[0].stream.data
+page_1_images[0].stream.get_data()
 ```
 
 ## Installation
